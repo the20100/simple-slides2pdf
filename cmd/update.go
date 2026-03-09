@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const repoURL = "https://github.com/the20100/slides2pdf-cli"
+const repoURL = "https://github.com/the20100/simple-slides2pdf"
 
 var updateCmd = &cobra.Command{
 	Use:   "update",
@@ -50,23 +50,23 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 	}
 	defer os.RemoveAll(tmpDir)
 
-	fmt.Fprintln(out, "-> Cloning latest source...")
+	fmt.Fprintln(out, "→ Cloning latest source...")
 	if err := streamCmd(cmd, tmpDir, "git", "clone", "--depth=1", repoURL, "."); err != nil {
 		return fmt.Errorf("git clone failed: %w", err)
 	}
 
-	fmt.Fprintln(out, "-> Building...")
+	fmt.Fprintln(out, "→ Building...")
 	newBin := filepath.Join(tmpDir, "slides2pdf")
 	if err := streamCmd(cmd, tmpDir, "go", "build", "-o", newBin, "."); err != nil {
 		return fmt.Errorf("go build failed: %w", err)
 	}
 
-	fmt.Fprintln(out, "-> Installing...")
+	fmt.Fprintln(out, "→ Installing...")
 	if err := atomicReplace(newBin, exe); err != nil {
 		return fmt.Errorf("replacing binary: %w", err)
 	}
 
-	fmt.Fprintln(out, "\nUpdated successfully.")
+	fmt.Fprintln(out, "\n✓ Updated successfully.")
 	return nil
 }
 
